@@ -94,10 +94,23 @@ export function resolvePrismaConfigPath(cwd: string): string | null {
 }
 
 export function resolveGeneratedPrismaClientPath(cwd: string): string | null {
-  return resolveFirstExistingPath([
+  const generatedClientPaths = [
     path.resolve(cwd, "apps", "web", "node_modules", ".prisma", "client"),
     path.resolve(cwd, "node_modules", ".prisma", "client"),
-  ]);
+  ];
+
+  for (const clientPath of generatedClientPaths) {
+    const requiredFiles = [
+      path.join(clientPath, "index.js"),
+      path.join(clientPath, "runtime", "library.js"),
+      path.join(clientPath, "runtime", "library.d.ts"),
+    ];
+    if (requiredFiles.every((filePath) => fs.existsSync(filePath))) {
+      return clientPath;
+    }
+  }
+
+  return null;
 }
 
 export function splitPrismaCliOutputLines(value: string): string[] {

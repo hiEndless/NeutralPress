@@ -18,6 +18,10 @@ loadWebEnv();
 
 const rlog = new Rlog();
 
+type PrismaClientConstructor = Awaited<
+  ReturnType<typeof loadPrismaClientConstructor>
+>;
+
 // 导出的数据库健康检查函数
 export async function checkDatabaseHealth(options?: {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -95,19 +99,27 @@ async function checkEnvironment() {
 
 // 初始化 Prisma 客户端
 async function initializePrismaClient() {
-  // 运行生成
-  rlog.info("> Generating Prisma client...");
-  runPrismaGenerate({
-    cwd: process.cwd(),
-    logger: (line) => {
-      rlog.info(`  | ${line.trim()}`);
-    },
-  });
-
-  rlog.info("  Prisma client generated successfully");
+  let PrismaClient: PrismaClientConstructor;
 
   try {
-    const PrismaClient = await loadPrismaClientConstructor();
+    PrismaClient = await loadPrismaClientConstructor();
+    rlog.success("✓ Prisma client loaded");
+  } catch (loadError) {
+    rlog.warning(
+      `  Prisma client is unavailable, generating it now: ${loadError instanceof Error ? loadError.message : String(loadError)}`,
+    );
+    rlog.info("> Generating Prisma client...");
+    runPrismaGenerate({
+      cwd: process.cwd(),
+      logger: (line) => {
+        rlog.info(`  | ${line.trim()}`);
+      },
+    });
+    rlog.info("  Prisma client generated successfully");
+    PrismaClient = await loadPrismaClientConstructor();
+  }
+
+  try {
     const { Pool } = await import("pg");
     const { PrismaPg } = await import("@prisma/adapter-pg");
 
