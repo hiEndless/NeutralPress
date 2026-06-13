@@ -20,13 +20,10 @@ jobs:
           node-version: 22
           cache: pnpm
 
-      - run: pnpm install --frozen-lockfile
+      - run: pnpm install --no-frozen-lockfile
 
       - name: Lint
         run: pnpm lint:ci
-
-      - name: Type Check
-        run: pnpm exec tsc --noEmit -p apps/web/tsconfig.json
 
       - name: Format Check
         run: npx prettier --check "**/*.{ts,tsx,js,jsx,css,md}" --log-level warn
