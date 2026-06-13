@@ -15,6 +15,7 @@
     "generate:blocks": "tsx scripts/generate-block-business-catalog.ts && tsx scripts/generate-block-definition-catalog.ts",
     "start": "next start",
     "lint": "eslint --max-warnings 0 . --fix",
+  "lint:ci": "eslint --max-warnings 0 .",
     "check-types": "next typegen && tsc --noEmit",
     "gen-prisma": "prisma generate",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,css,md}\" --log-level warn",

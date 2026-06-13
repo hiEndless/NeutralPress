@@ -5,6 +5,7 @@
     "build": "turbo run build",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
+    "lint:ci": "turbo run lint:ci",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,css,md}\" --log-level warn",
     "check-types": "turbo run check-types",
     "generate-openapi": "turbo run generate-openapi",
