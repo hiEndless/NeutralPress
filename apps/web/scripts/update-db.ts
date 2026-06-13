@@ -1,7 +1,6 @@
 // script/update-db.ts
 // 数据库更新和迁移脚本
 
-import { execSync } from "child_process";
 import fs from "fs";
 import path from "path";
 import Rlog from "rlog-js";
