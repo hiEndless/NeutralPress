@@ -1,6 +1,6 @@
 {
   "name": "@repo/shared-types",
-  "version": "5.1.0",
+  "version": "5.1.1",
   "type": "module",
   "private": true,
   "main": "./dist/index.js",
