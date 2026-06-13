@@ -1,12 +1,12 @@
 // script/check-db.ts
 // 检查数据库连接，验证数据库健康状态
 
-import { execSync } from "child_process";
 import Rlog from "rlog-js";
 import { pathToFileURL } from "url";
 
 import { getPrismaDatabaseUrl, loadWebEnv } from "@/../scripts/load-env";
 import { loadPrismaClientConstructor } from "@/../scripts/load-prisma-client";
+import { runPrismaGenerate } from "@/../scripts/prisma-cli";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let prisma: any;
@@ -97,21 +97,14 @@ async function checkEnvironment() {
 async function initializePrismaClient() {
   // 运行生成
   rlog.info("> Generating Prisma client...");
-  const output = execSync("npx prisma generate", {
-    stdio: "pipe",
+  runPrismaGenerate({
     cwd: process.cwd(),
-    encoding: "utf-8",
+    logger: (line) => {
+      rlog.info(`  | ${line.trim()}`);
+    },
   });
 
-  // 如果输出包含有用信息，显示它
-  if (output && output.trim()) {
-    const lines = output.trim().split("\n");
-    lines.forEach((line) => {
-      rlog.info(`  | ${line.trim()}`);
-    });
-  }
-
-  rlog.info("  Prisma migrate deploy completed successfully");
+  rlog.info("  Prisma client generated successfully");
 
   try {
     const PrismaClient = await loadPrismaClientConstructor();

@@ -8,6 +8,7 @@ import { pathToFileURL } from "url";
 
 import { getPrismaDatabaseUrl, loadWebEnv } from "@/../scripts/load-env";
 import { loadPrismaClientConstructor } from "@/../scripts/load-prisma-client";
+import { runPrismaMigrateDeploy } from "@/../scripts/prisma-cli";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let prisma: any;
@@ -212,10 +213,6 @@ async function isProjectDatabase(): Promise<boolean> {
 async function runMigrateDeploy(): Promise<void> {
   try {
     rlog.info("> Running prisma migrate deploy...");
-
-    const { runPrismaMigrateDeploy } = await import(
-      "@/lib/server/prisma-migrate"
-    );
 
     let output = "";
     await runPrismaMigrateDeploy({
